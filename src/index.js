@@ -36,12 +36,13 @@ async function getStuff(url) {
 
 async function doMyThing(url) {
     let plansFound = 0
+    let nCopies = 0
     fileDescriptor = await open('./zynx-data-0', 'a+')
     do {        
         plansFound = await getStuff(url);
         console.log(`plans found: ${plansFound}, stuff.length: ${stuff.length}`)
         console.log(`nextUrl: ${nextUrl}`)
-    } while (nextUrl != '')
+    } while (nextUrl != '' && ++nCopies < 51)
     fileDescriptor.close()
 }
 
