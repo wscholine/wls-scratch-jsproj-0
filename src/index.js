@@ -26,8 +26,8 @@ async function getStuff(url) {
     then((data) => data.entry.filter(x => x.resource.type.coding[0].code === 'clinical-protocol')).
     then(entries => {
         console.log(entries)
-        fileDescriptor.appendFile(JSON.stringify(entries[0]))
-        fileDescriptor.appendFile(',')
+        // fileDescriptor.appendFile(JSON.stringify(entries[0]))
+        // fileDescriptor.appendFile(',')
         stuff.push(entries)
         console.log(`entries.length: ${entries.length}`)
         return entries.length;
@@ -37,16 +37,21 @@ async function getStuff(url) {
 async function doMyThing(url) {
     let plansFound = 0
     let nCopies = 0
-    fileDescriptor = await open('./zynx-data-0', 'a+')
+//    fileDescriptor = await open('./zynx-data-0', 'a+')
     do {        
         plansFound = await getStuff(url);
         console.log(`plans found: ${plansFound}, stuff.length: ${stuff.length}`)
         console.log(`nextUrl: ${nextUrl}`)
     } while (nextUrl != '' && ++nCopies < 51)
+    console.log(`stuff.length: ${stuff.length}`)
+    const foo = {
+        planDefs : stuff
+    }
+    fileDescriptor = await open('./zynx-data-0.json', 'a+')
+    fileDescriptor.appendFile(JSON.stringify(foo))
     fileDescriptor.close()
 }
 
 
 doMyThing(nextUrl);
 
-console.log(`stuff.length: ${stuff.length}`)
